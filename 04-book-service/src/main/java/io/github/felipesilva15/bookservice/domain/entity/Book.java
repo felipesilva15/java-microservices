@@ -33,10 +33,4 @@ public class Book implements Serializable {
 
     @Column(nullable = false)
     private Double price;
-
-    @Transient
-    private String currency;
-
-    @Transient
-    private String environment;
 }

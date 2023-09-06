@@ -1,11 +1,11 @@
 package io.github.felipesilva15.cambioservice.domain.entity;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -28,11 +28,5 @@ public class Cambio implements Serializable {
     private String to;
 
     @Column(nullable = false)
-    private BigDecimal convertionFactor;
-
-    @Transient
-    private BigDecimal convertedValue;
-
-    @Transient
-    private String environment;
+    private BigDecimal conversionFactor;
 }

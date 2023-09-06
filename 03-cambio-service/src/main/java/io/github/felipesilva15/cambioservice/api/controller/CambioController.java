@@ -1,5 +1,6 @@
 package io.github.felipesilva15.cambioservice.api.controller;
 
+import io.github.felipesilva15.cambioservice.api.dto.CambioDTO;
 import io.github.felipesilva15.cambioservice.domain.entity.Cambio;
 import io.github.felipesilva15.cambioservice.domain.repository.CambioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,19 +25,18 @@ public class CambioController {
     private CambioRepository repository;
 
     @GetMapping("/{amount}/{from}/{to}")
-    public ResponseEntity<Cambio> getCambio(@PathVariable("amount") BigDecimal amount, @PathVariable("from") String from, @PathVariable("to") String to) {
+    public ResponseEntity<CambioDTO> getCambio(@PathVariable("amount") BigDecimal amount, @PathVariable("from") String from, @PathVariable("to") String to) {
         Cambio cambio = repository.findByFromAndTo(from, to);
 
         if (cambio == null) {
-            throw new RuntimeException("Currency Unsupported");
+            throw new RuntimeException("Currency Unsupported.");
         }
 
         var port = environment.getProperty("local.server.port");
-        BigDecimal convertedValue = cambio.getConvertionFactor().multiply(amount);
+        BigDecimal convertedValue = cambio.getConversionFactor().multiply(amount).setScale(2, RoundingMode.CEILING);
 
-        cambio.setEnvironment(port);
-        cambio.setConvertedValue(convertedValue.setScale(2, RoundingMode.CEILING));
+        CambioDTO cambioDTO = new CambioDTO(cambio.getId(), cambio.getFrom(), cambio.getTo(), cambio.getConversionFactor(), convertedValue, port);
 
-        return new ResponseEntity<>(cambio, HttpStatus.OK);
+        return new ResponseEntity<>(cambioDTO, HttpStatus.OK);
     }
 }
