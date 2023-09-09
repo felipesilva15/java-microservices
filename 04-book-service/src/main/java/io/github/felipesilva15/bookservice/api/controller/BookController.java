@@ -34,34 +34,11 @@ public class BookController {
         }
 
         var cambio = cambioClient.getCambio(book.getPrice(), "USD", currency);
-        String port = environment.getProperty("local.server.port") + " FEIGN";
+        String port = environment.getProperty("local.server.port");
+        String environment = "Book port: " + port + " Cambio port: " + cambio.environment();
 
-        BookDTO bookDTO = new BookDTO(book.getId(), book.getAuthor(), book.getLaunchDate(), cambio.convertedValue(), book.getTitle(), currency, port);
+        BookDTO bookDTO = new BookDTO(book.getId(), book.getAuthor(), book.getLaunchDate(), cambio.convertedValue(), book.getTitle(), currency, environment);
 
         return new ResponseEntity<>(bookDTO, HttpStatus.OK);
     }
-
-    /**
-    @GetMapping("/{id}/{currency}")
-    public ResponseEntity<BookDTO> findBook(@PathVariable("id") Long id, @PathVariable("currency") String currency) {
-        Book book = repository.getById(id);
-
-        if(book == null) {
-            throw new RuntimeException("Book not found");
-        }
-
-        HashMap<String, String> params = new HashMap<>();
-        params.put("amount", book.getPrice().toString());
-        params.put("from", "USD");
-        params.put("to", currency);
-
-        var response =  new RestTemplate().getForEntity("http://localhost:8000/cambio-service/{amount}/{from}/{to}", CambioDTO.class, params);
-
-        var cambio = response.getBody();
-        String port = environment.getProperty("local.server.port");
-
-        BookDTO bookDTO = new BookDTO(book.getId(), book.getAuthor(), book.getLaunchDate(), cambio.convertedValue(), book.getTitle(), currency, port);
-
-        return new ResponseEntity<>(bookDTO, HttpStatus.OK);
-    }*/
 }
