@@ -3,6 +3,8 @@ package io.github.felipesilva15.cambioservice.api.controller;
 import io.github.felipesilva15.cambioservice.api.dto.CambioDTO;
 import io.github.felipesilva15.cambioservice.domain.entity.Cambio;
 import io.github.felipesilva15.cambioservice.domain.repository.CambioRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+@Tag(name = "Cambio Service API")
 @RestController
 @RequestMapping("cambio-service")
 public class CambioController {
@@ -25,6 +28,7 @@ public class CambioController {
     @Autowired
     private CambioRepository repository;
 
+    @Operation(description = "Get cambio from currency!")
     @GetMapping("/{amount}/{from}/{to}")
     public ResponseEntity<CambioDTO> getCambio(@PathVariable("amount") BigDecimal amount, @PathVariable("from") String from, @PathVariable("to") String to) {
         Cambio cambio = repository.findByFromAndTo(from, to);
