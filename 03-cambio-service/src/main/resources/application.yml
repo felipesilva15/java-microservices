@@ -21,6 +21,9 @@ spring:
     url: jdbc:mysql://localhost:3306/cambio_service
     user: root
     password: root
+  sleuth:
+    sampler:
+      probability: 1.0
 springdoc:
   show-actuator: true
   api-docs:

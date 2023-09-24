@@ -5,6 +5,8 @@ import io.github.felipesilva15.cambioservice.domain.entity.Cambio;
 import io.github.felipesilva15.cambioservice.domain.repository.CambioRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,8 @@ import java.math.RoundingMode;
 @RestController
 @RequestMapping("cambio-service")
 public class CambioController {
+    private Logger logger = LoggerFactory.getLogger(CambioController.class);
+
     @Autowired
     private Environment environment;
 
@@ -31,6 +35,8 @@ public class CambioController {
     @Operation(description = "Get cambio from currency!")
     @GetMapping("/{amount}/{from}/{to}")
     public ResponseEntity<CambioDTO> getCambio(@PathVariable("amount") BigDecimal amount, @PathVariable("from") String from, @PathVariable("to") String to) {
+        logger.info("getCambio is called with -> {}, {} and {}.", amount, from, to);
+
         Cambio cambio = repository.findByFromAndTo(from, to);
 
         if (cambio == null) {
